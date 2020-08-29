@@ -14,7 +14,7 @@ const timeFormat = "2006-01-02 15:04:05 -0700 MST"
 func main() {
 	ntpTime, err := ntp.Time(ntpServer)
 	if err != nil {
-		log.Fatalf("Error get ntp time %s", err)
+		log.Fatalf("Error get ntp time %s\n", err)
 	}
 	localTime := time.Now()
 
