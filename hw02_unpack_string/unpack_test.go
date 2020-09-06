@@ -19,6 +19,19 @@ func TestUnpack(t *testing.T) {
 			expected: "aaaabccddddde",
 		},
 		{
+			input:    "a4b5",
+			expected: "aaaabbbbb",
+		},
+		{
+			input:    "5",
+			expected: "",
+			err:      ErrInvalidString,
+		},
+		{
+			input:    "世界4bc2d5e界",
+			expected: "世界界界界bccddddde界",
+		},
+		{
 			input:    "abccd",
 			expected: "abccd",
 		},
@@ -38,6 +51,11 @@ func TestUnpack(t *testing.T) {
 			err:      ErrInvalidString,
 		},
 		{
+			input:    "1",
+			expected: "",
+			err:      ErrInvalidString,
+		},
+		{
 			input:    "",
 			expected: "",
 		},
@@ -53,7 +71,7 @@ func TestUnpack(t *testing.T) {
 }
 
 func TestUnpackWithEscape(t *testing.T) {
-	t.Skip() // Remove if task with asterisk completed
+	// t.Skip() // Remove if task with asterisk completed
 
 	for _, tst := range [...]test{
 		{
@@ -65,6 +83,10 @@ func TestUnpackWithEscape(t *testing.T) {
 			expected: `qwe44444`,
 		},
 		{
+			input:    `qwe2\45`,
+			expected: `qwee44444`,
+		},
+		{
 			input:    `qwe\\5`,
 			expected: `qwe\\\\\`,
 		},
@@ -72,9 +94,57 @@ func TestUnpackWithEscape(t *testing.T) {
 			input:    `qwe\\\3`,
 			expected: `qwe\3`,
 		},
+		{
+			input:    `qwe3\`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `qwe3\\`,
+			expected: `qweee\`,
+		},
+		{
+			input:    `\\`,
+			expected: `\`,
+		},
+		{
+			input:    `\\\`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `\`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `\x`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `a\x`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `a\\\x`,
+			expected: ``,
+			err:      ErrInvalidString,
+		},
+		{
+			input:    `a\\x`,
+			expected: `a\x`,
+		},
 	} {
 		result, err := Unpack(tst.input)
 		require.Equal(t, tst.err, err)
 		require.Equal(t, tst.expected, result)
+	}
+}
+
+func BenchmarkUnpack(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Unpack(`qwe\\\3`)
 	}
 }
