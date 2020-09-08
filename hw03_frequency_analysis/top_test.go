@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed
-var taskWithAsteriskIsCompleted = false
+var taskWithAsteriskIsCompleted = true
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -48,6 +48,18 @@ func TestTop10(t *testing.T) {
 		require.Len(t, Top10(""), 0)
 	})
 
+	t.Run("less than 10 words in text", func(t *testing.T) {
+		text := "one one two two two three - five six"
+		expected := []string{"two", "one", "three", "five", "six"}
+		require.ElementsMatch(t, expected, Top10(text))
+	})
+
+	t.Run("russian jo", func(t *testing.T) {
+		text := "ёжик ёжик - ёлка"
+		expected := []string{"ёжик", "ёлка"}
+		require.ElementsMatch(t, expected, Top10(text))
+	})
+
 	t.Run("positive test", func(t *testing.T) {
 		if taskWithAsteriskIsCompleted {
 			expected := []string{"он", "а", "и", "что", "ты", "не", "если", "то", "его", "кристофер", "робин", "в"}
@@ -57,4 +69,10 @@ func TestTop10(t *testing.T) {
 			require.ElementsMatch(t, expected, Top10(text))
 		}
 	})
+}
+
+func BenchmarkUnpack(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Top10(text)
+	}
 }
