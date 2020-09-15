@@ -15,6 +15,94 @@ func TestList(t *testing.T) {
 		require.Nil(t, l.Back())
 	})
 
+	t.Run("test PushBack one element", func(t *testing.T) {
+		l := NewList()
+		l.PushBack(10)
+
+		require.Equal(t, 1, l.Len())
+		require.NotNil(t, l.Front())
+		require.NotNil(t, l.Back())
+		require.Equal(t, l.Front(), l.Back())
+	})
+
+	t.Run("test PushFront one element", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(20)
+
+		require.Equal(t, 1, l.Len())
+		require.NotNil(t, l.Front())
+		require.NotNil(t, l.Back())
+		require.Equal(t, l.Front(), l.Back())
+	})
+
+	t.Run("test PushBack two elements", func(t *testing.T) {
+		l := NewList()
+		l.PushBack(10)
+		l.PushBack(20)
+
+		require.Equal(t, 2, l.Len())
+		require.NotEqual(t, l.Front(), l.Back())
+	})
+
+	t.Run("test PushFront two elements", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(20)
+		l.PushFront(30)
+
+		require.Equal(t, 2, l.Len())
+		require.NotEqual(t, l.Front(), l.Back())
+	})
+
+	t.Run("remove single element", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(10)
+		l.Remove(l.Front())
+
+		require.Equal(t, 0, l.Len())
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+	})
+
+	t.Run("remove from empty list", func(t *testing.T) {
+		l := NewList()
+		l.Remove(l.Front())
+
+		require.Equal(t, 0, l.Len())
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+	})
+
+	t.Run("remove one from two elements", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(10)
+		l.PushFront(20)
+		l.Remove(l.Front())
+
+		require.Equal(t, 1, l.Len())
+		require.NotNil(t, l.Front())
+		require.NotNil(t, l.Back())
+		require.Equal(t, l.Front(), l.Back())
+	})
+
+	t.Run("remove all elements", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(10)
+		l.PushFront(20)
+		l.Remove(l.Front())
+		l.Remove(l.Back())
+
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+	})
+
+	t.Run("test MoveToFront single element", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(10)
+		l.MoveToFront(l.Back())
+		require.Equal(t, 1, l.Len())
+		require.Equal(t, l.Front(), l.Back())
+	})
+
 	t.Run("complex", func(t *testing.T) {
 		l := NewList()
 
